@@ -1,29 +1,34 @@
-import { Box, HStack, Text, Image, Center } from "@chakra-ui/react";
-import { AiOutlinePoweroff as LogOut } from "react-icons/ai";
-import { Home, Chat, Bell, Settings, Avatar } from "../resources/Resources";
+import { Box, HStack, Text, Image, Center, Icon } from "@chakra-ui/react";
+import {
+  AiOutlinePoweroff as LogOut,
+  AiOutlineHome as Home,
+  AiOutlineBell as Bell,
+} from "react-icons/ai";
+import { BsChatDots as Chat, BsGear as Settings } from "react-icons/bs";
+import { Avatar } from "../resources/Resources";
 
 function SideBar() {
   const sideBarItem = [
     {
       name: "Home",
-      icon: Home,
+      icon: <Home className="icon" size="24" />,
     },
     {
       name: "Chat",
-      icon: Chat,
+      icon: <Chat className="icon" size="24" />,
     },
     {
       name: "Notification",
-      icon: Bell,
+      icon: <Bell className="icon" size="24" />,
     },
     {
       name: "Settings",
-      icon: Settings,
+      icon: <Settings className="icon" size="24" />,
     },
   ];
   return (
     <Box
-      className="p-8 m-0 shadow-2xl h-full w-2/12 min-w-side"
+      className="py-8 m-0 shadow-2xl h-full w-2/12 min-w-side"
       backgroundColor="white"
     >
       <Center>
@@ -33,9 +38,12 @@ function SideBar() {
         <Text className="font-semibold text-lg">Dao Ngoc Hieu</Text>
       </Center>
       {sideBarItem.map((item) => (
-        <HStack className="my-10" spacing="15px">
-          <img src={item.icon} alt={item.name + " Icon"} />
-          <Text className="uppercase font-semibold text-gray-400">
+        <HStack
+          className="py-5 px-8 cursor-pointer nav-item hover:shadow-md"
+          spacing="15px"
+        >
+          {item.icon}
+          <Text className="uppercase nav-text font-semibold text-gray-400">
             {item.name}
           </Text>
         </HStack>
