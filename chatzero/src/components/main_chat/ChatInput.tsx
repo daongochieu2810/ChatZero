@@ -12,7 +12,7 @@ function ChatInput() {
   };
 
   return (
-    <Box className="w-full p-5">
+    <Box className="w-full px-5 pb-5">
       <HStack className="w-full pt-2 pl-2 border-t-2">
         <IconButton
           className="hvr-grow gradient-blue"

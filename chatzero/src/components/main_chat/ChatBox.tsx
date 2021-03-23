@@ -1,11 +1,31 @@
-import { Box, Flex, VStack } from "@chakra-ui/react";
+import { useState, useEffect } from "react";
+import { Message } from "../../types/chat";
 import ChatInput from "./ChatInput";
 import ChatItem from "./ChatItem";
 import TopBar from "./TopBar";
 
-const messages = [1, 2, 3, 34, 4, 3, 3, 3, 3, 3, 3, 3];
-
 function ChatBox() {
+  const [messages, setMessages] = useState<Message[]>([]);
+  useEffect(() => {
+    let _messages: Message[] = [];
+    for (let i = 0; i < 10; i++) {
+      _messages.push({
+        content: "How are you",
+        sender: {
+          name: "Hieu",
+          avatar: "hieu",
+        },
+        receiver: {
+          name: "Hieu",
+          avatar: "hieu",
+        },
+        sentTime: new Date().getMilliseconds(),
+        receivedTime: new Date().getMilliseconds(),
+      });
+    }
+    setMessages(_messages);
+  }, []);
+
   return (
     <div
       className="w-full h-full shadow-xl relative"
@@ -24,8 +44,8 @@ function ChatBox() {
           overflowY: "scroll",
         }}
       >
-        {messages.map(() => (
-          <ChatItem />
+        {messages.map((item: Message) => (
+          <ChatItem message={item} />
         ))}
       </div>
       <div className="flex-none w-full">

@@ -14,6 +14,10 @@ module.exports = {
       },
       height: {
         "1/10": "10%",
+        icon: "50px",
+      },
+      width: {
+        icon: "50px",
       },
     },
   },
