@@ -28,7 +28,7 @@ function SideBar() {
   ];
   return (
     <Box
-      className="py-8 m-0 shadow-2xl h-full w-2/12 min-w-side"
+      className="desktop:block tablets:hidden mobile:hidden py-8 m-0 shadow-2xl h-full w-2/12 min-w-side"
       backgroundColor="white"
     >
       <Center>

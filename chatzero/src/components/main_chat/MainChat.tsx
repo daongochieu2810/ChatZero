@@ -3,7 +3,7 @@ import ChatBox from "./ChatBox";
 
 function MainChat() {
   return (
-    <Box className="p-20 h-full w-6/12">
+    <Box className="h-full w-6/12">
       <Center className="h-full w-full">
         <ChatBox />
       </Center>

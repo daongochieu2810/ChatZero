@@ -28,7 +28,7 @@ function ChatBox() {
 
   return (
     <div
-      className="w-full h-full shadow-xl relative"
+      className="w-9/10 h-9/10 shadow-xl relative"
       style={{
         display: "flex",
         flexDirection: "column",
