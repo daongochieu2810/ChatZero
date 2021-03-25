@@ -17,4 +17,8 @@ export default class UsersService {
   async findAll(): Promise<User[]> {
     return this.userModel.find().exec();
   }
+
+  async findOne(username: string): Promise<User> {
+    return this.userModel.findOne((user: User) => user.name === username);
+  }
 }
