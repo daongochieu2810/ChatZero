@@ -67,3 +67,7 @@
 .nav-item:hover .icon {
   color: #34aeeb;
 }
+
+.log-out:hover * {
+  color: red;
+}

@@ -1,8 +1,8 @@
-import { PersistGate } from "redux-persist/integration/react";
-import { Container, HStack } from "@chakra-ui/react";
-import SideBar from "./components/SideBar";
-import MainChat from "./components/main_chat/MainChat";
-import MainBrowser from "./components/chat_browser/MainBrowser";
+import { HashRouter as Router, Route, Switch } from "react-router-dom";
+import Login from "./components/auth/Login";
+import Register from "./components/auth/Register";
+import Home from "./components/home/Home";
+import { baseUrl } from "./constants";
 
 function App() {
   return (
@@ -12,16 +12,13 @@ function App() {
         height: "100vh",
       }}
     >
-      <Container
-        variant="full"
-        bgGradient="linear-gradient(to-r, #F3F3FB, #FDFBFD)"
-      >
-        <HStack className="w-full h-full" spacing="10">
-          <SideBar />
-          <MainBrowser />
-          <MainChat />
-        </HStack>
-      </Container>
+      <Router basename={baseUrl}>
+        <Switch>
+          <Route exact path="/" component={Home} />
+          <Route exact path="/auth/login" component={Login} />
+          <Route exact path="/auth/register" component={Register} />
+        </Switch>
+      </Router>
     </div>
   );
 }

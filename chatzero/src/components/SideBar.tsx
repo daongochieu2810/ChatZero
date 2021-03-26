@@ -1,13 +1,17 @@
-import { Box, HStack, Text, Image, Center, Icon } from "@chakra-ui/react";
+import { Box, HStack, Text, Image, Center } from "@chakra-ui/react";
 import {
   AiOutlinePoweroff as LogOut,
   AiOutlineHome as Home,
   AiOutlineBell as Bell,
 } from "react-icons/ai";
 import { BsChatDots as Chat, BsGear as Settings } from "react-icons/bs";
+import { useHistory } from "react-router-dom";
+import { baseUrl } from "../constants";
+
 import { Avatar } from "../resources/Resources";
 
 function SideBar() {
+  const history = useHistory();
   const sideBarItem = [
     {
       name: "Home",
@@ -28,7 +32,7 @@ function SideBar() {
   ];
   return (
     <Box
-      className="desktop:block tablets:hidden mobile:hidden py-8 m-0 shadow-2xl h-full w-2/12 min-w-side"
+      className="desktop:block tablet:hidden mobile:hidden py-8 m-0 shadow-2xl h-full w-2/12 min-w-side"
       backgroundColor="white"
     >
       <Center>
@@ -48,7 +52,12 @@ function SideBar() {
           </Text>
         </HStack>
       ))}
-      <HStack className="absolute m-8 left-0 bottom-0">
+      <HStack
+        className="absolute m-8 left-0 bottom-0 hvr-grow log-out cursor-pointer"
+        onClick={() => {
+          history.push("/auth/login");
+        }}
+      >
         <LogOut
           style={{
             marginRight: "15px",
