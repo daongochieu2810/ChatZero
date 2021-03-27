@@ -41,8 +41,9 @@ function SideBar() {
       <Center className="my-5">
         <Text className="font-semibold text-lg">Dao Ngoc Hieu</Text>
       </Center>
-      {sideBarItem.map((item) => (
+      {sideBarItem.map((item: any, index: number) => (
         <HStack
+          key={index}
           className="py-5 px-8 cursor-pointer nav-item hover:shadow-md"
           spacing="15px"
         >

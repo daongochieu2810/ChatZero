@@ -1,10 +1,32 @@
-import { PersistGate } from "redux-persist/integration/react";
+import { useEffect } from "react";
+import { io } from "socket.io-client";
+import Config from "../../utils/config";
 import { Container, HStack } from "@chakra-ui/react";
 import SideBar from "../SideBar";
 import MainChat from "../main_chat/MainChat";
 import MainBrowser from "../chat_browser/MainBrowser";
 
 function Home() {
+  useEffect(() => {
+    const socket = io(Config.SERVER_BASE_URL);
+    console.log(Config.SERVER_BASE_URL);
+    socket.on("connect", function () {
+      console.log("Connected");
+
+      socket.emit("messages", { data: "test" });
+    });
+
+    socket.on("messages", function (data) {
+      console.log("message", data);
+    });
+
+    socket.on("exception", function (data) {
+      console.log("event", data);
+    });
+    socket.on("disconnect", function () {
+      console.log("Disconnected");
+    });
+  });
   return (
     <div
       style={{

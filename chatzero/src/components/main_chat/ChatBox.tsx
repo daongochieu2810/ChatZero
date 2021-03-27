@@ -44,8 +44,8 @@ function ChatBox() {
           overflowY: "scroll",
         }}
       >
-        {messages.map((item: Message) => (
-          <ChatItem message={item} />
+        {messages.map((item: Message, index: number) => (
+          <ChatItem key={index} message={item} />
         ))}
       </div>
       <div className="flex-none w-full">

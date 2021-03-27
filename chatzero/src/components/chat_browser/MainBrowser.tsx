@@ -21,8 +21,8 @@ function MainBrowser() {
         </Box>
       </SimpleGrid>
       <div>
-        {feeds.map(() => (
-          <FeedItem />
+        {feeds.map((index: number) => (
+          <FeedItem key={index} />
         ))}
       </div>
     </Box>
