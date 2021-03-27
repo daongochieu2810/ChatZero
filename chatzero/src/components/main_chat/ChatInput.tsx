@@ -1,3 +1,4 @@
+import React from "react";
 import { ChangeEvent, useState } from "react";
 import { Box, Textarea, IconButton, HStack } from "@chakra-ui/react";
 import { RiSendPlaneLine as SendIcon } from "react-icons/ri";

@@ -1,3 +1,4 @@
+import React from "react";
 import { Box, HStack, Text, Image } from "@chakra-ui/react";
 import { Avatar } from "../../resources/Resources";
 import { Message } from "../../../../common/types";

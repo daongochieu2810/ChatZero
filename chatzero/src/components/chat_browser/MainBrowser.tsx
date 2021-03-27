@@ -1,3 +1,4 @@
+import React from "react";
 import { Box, Button, SimpleGrid, Text } from "@chakra-ui/react";
 import FeedItem from "./FeedItem";
 

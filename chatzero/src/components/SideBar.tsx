@@ -1,3 +1,4 @@
+import React from "react";
 import { Box, HStack, Text, Image, Center } from "@chakra-ui/react";
 import {
   AiOutlinePoweroff as LogOut,

@@ -1,3 +1,4 @@
+import React from "react";
 import { Box, Center } from "@chakra-ui/react";
 import ChatBox from "./ChatBox";
 

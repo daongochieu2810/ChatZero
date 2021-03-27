@@ -1,3 +1,4 @@
+import React from "react";
 import { useState, useEffect } from "react";
 import { Message } from "../../../../common/types";
 import ChatInput from "./ChatInput";

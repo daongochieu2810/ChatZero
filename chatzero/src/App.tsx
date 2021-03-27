@@ -1,3 +1,4 @@
+import React from "react";
 import { HashRouter as Router, Route, Switch } from "react-router-dom";
 
 import Login from "./components/auth/Login";
@@ -6,6 +7,7 @@ import Home from "./components/home/Home";
 import { baseUrl } from "./constants";
 
 function App() {
+  console.log(process.env.CLIENT_ENV);
   return (
     <div
       style={{

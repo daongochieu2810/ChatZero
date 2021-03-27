@@ -1,4 +1,4 @@
-import { User } from "../../types/chat";
+import { User } from "../../../../common/types";
 
 export const SET_CURRENT_USER = "SET_CURRENT_USER";
 
