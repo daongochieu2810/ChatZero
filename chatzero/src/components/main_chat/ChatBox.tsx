@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Message } from "../../types/chat";
+import { Message } from "../../../../common/types";
 import ChatInput from "./ChatInput";
 import ChatItem from "./ChatItem";
 import TopBar from "./TopBar";
@@ -10,17 +10,20 @@ function ChatBox() {
     let _messages: Message[] = [];
     for (let i = 0; i < 10; i++) {
       _messages.push({
-        content: "How are you",
+        belongsTo: "",
+        text: "How are you",
         sender: {
           name: "Hieu",
           avatar: "hieu",
+          password: "",
         },
         receiver: {
           name: "Hieu",
           avatar: "hieu",
+          password: "",
         },
-        sentTime: new Date().getMilliseconds(),
-        receivedTime: new Date().getMilliseconds(),
+        sentAt: new Date().getMilliseconds(),
+        receivedAt: new Date().getMilliseconds(),
       });
     }
     setMessages(_messages);

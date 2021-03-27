@@ -1,11 +1,16 @@
 import { combineReducers, AnyAction, Reducer } from "redux";
-import { GeneralState } from "../../types/data";
+import { User } from "../../../../common/types";
 import { SET_CURRENT_USER, UserAction } from "./actions";
+
+export interface GeneralState {
+  currentUser: User;
+}
 
 const initState: GeneralState = {
   currentUser: {
     name: "",
     avatar: "",
+    password: "",
   },
 };
 

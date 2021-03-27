@@ -1,6 +1,6 @@
 import { Box, HStack, Text, Image } from "@chakra-ui/react";
 import { Avatar } from "../../resources/Resources";
-import { Message } from "../../types/chat";
+import { Message } from "../../../../common/types";
 
 export interface ChatItemProps {
   message: Message;
@@ -14,7 +14,7 @@ function ChatItem({ message }: ChatItemProps) {
         className="p-5 gradient-blue shadow-md"
         style={{ borderRadius: "0 5px 5px 5px" }}
       >
-        <Text className="text-white">{message.content}</Text>
+        <Text className="text-white">{message.text}</Text>
       </Box>
     </HStack>
   );
