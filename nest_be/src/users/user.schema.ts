@@ -16,6 +16,7 @@ export class User extends Document {
 export class UserDto {
   readonly name: string;
   readonly avatar: string;
+  readonly password: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { io } from "socket.io-client";
+import { io, Socket } from "socket.io-client";
 import Config from "../../utils/config";
 import { Container, HStack } from "@chakra-ui/react";
 import SideBar from "../SideBar";
@@ -8,7 +8,7 @@ import MainBrowser from "../chat_browser/MainBrowser";
 
 function Home() {
   useEffect(() => {
-    /*const socket = io(Config.SERVER_BASE_URL);
+    const socket: Socket = io(Config.SERVER_BASE_URL);
     console.log(Config.SERVER_BASE_URL);
     socket.on("connect", function () {
       console.log("Connected");
@@ -25,7 +25,7 @@ function Home() {
     });
     socket.on("disconnect", function () {
       console.log("Disconnected");
-    });*/
+    });
   });
   return (
     <div

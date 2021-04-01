@@ -1,6 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { Message } from "../../../../common/types";
+import { Message } from "../../utils/types";
 import ChatInput from "./ChatInput";
 import ChatItem from "./ChatItem";
 import TopBar from "./TopBar";

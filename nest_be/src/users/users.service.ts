@@ -10,8 +10,8 @@ export default class UsersService {
   ) {}
 
   async create(user: UserDto): Promise<User> {
-    const createdCat = new this.userModel(user);
-    return createdCat.save();
+    const createdUser = new this.userModel(user);
+    return createdUser.save();
   }
 
   async findAll(): Promise<User[]> {
