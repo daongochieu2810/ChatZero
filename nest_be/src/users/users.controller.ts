@@ -7,13 +7,13 @@ import UsersService from './users.service';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @UseGuards(JwtAuthGuard)
+  //@UseGuards(JwtAuthGuard)
   @Post()
   async create(@Body() user: UserDto): Promise<UserDto> {
     return await this.usersService.create(user);
   }
 
-  @UseGuards(JwtAuthGuard)
+  //@UseGuards(JwtAuthGuard)
   @Get()
   async findAll(): Promise<User[]> {
     return this.usersService.findAll();

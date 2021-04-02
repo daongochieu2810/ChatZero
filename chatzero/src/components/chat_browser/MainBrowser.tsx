@@ -1,6 +1,7 @@
 import React from "react";
 import { Box, Button, SimpleGrid, Text } from "@chakra-ui/react";
 import FeedItem from "./FeedItem";
+import ApiService from "../../data/redux/services/ApiService";
 
 const feeds = [0, 1, 2, 3];
 function MainBrowser() {
@@ -16,7 +17,35 @@ function MainBrowser() {
           <Text className="text-5xl font-semibold">Chats</Text>
         </Box>
         <Box>
-          <Button className="gradient-blue text-white hvr-grow" size="lg">
+          <Button
+            className="gradient-blue text-white hvr-grow"
+            size="lg"
+            onClick={() => {
+              //console.log(new Date().getMilliseconds);
+              ApiService.request({
+                url: "/users",
+                method: "GET",
+              }).then((users: any) => {
+                ApiService.request({
+                  url: "/chat",
+                  method: "POST",
+                  data: {
+                    person1: users[0],
+                    person2: users[1],
+                    createdAt: new Date().getMilliseconds(),
+                  },
+                }).then((response: any) => {
+                  console.log(response);
+                  ApiService.request({
+                    url: "/chat",
+                    method: "GET",
+                  }).then((data: any) => {
+                    console.log(data);
+                  });
+                });
+              });
+            }}
+          >
             <Text className="mr-2 text-2xl">+</Text> Create new chat
           </Button>
         </Box>
