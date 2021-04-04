@@ -1,10 +1,18 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Box, Button, SimpleGrid, Text } from "@chakra-ui/react";
+import { useQuery } from "react-query";
 import FeedItem from "./FeedItem";
 import ApiService from "../../data/redux/services/ApiService";
+import UserService from "../../data/redux/services/UserService";
 
 const feeds = [0, 1, 2, 3];
 function MainBrowser() {
+  const { data } = useQuery("/users", async () => {
+    return await UserService.getUsers();
+  });
+  useEffect(() => {
+    console.log(data);
+  });
   return (
     <Box className="mobile:hidden tablet:block desktop:block h-full w-4/12">
       <SimpleGrid
@@ -22,7 +30,7 @@ function MainBrowser() {
             size="lg"
             onClick={() => {
               //console.log(new Date().getMilliseconds);
-              ApiService.request({
+              /*ApiService.request({
                 url: "/users",
                 method: "GET",
               }).then((users: any) => {
@@ -43,7 +51,7 @@ function MainBrowser() {
                     console.log(data);
                   });
                 });
-              });
+              });*/
             }}
           >
             <Text className="mr-2 text-2xl">+</Text> Create new chat
