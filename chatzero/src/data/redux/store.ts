@@ -1,19 +1,25 @@
-import { createStore } from "redux";
+import { createStore, combineReducers } from "redux";
 import { persistStore, persistReducer, PersistConfig } from "redux-persist";
 import storage from "redux-persist/lib/storage";
-import rootReducer from "./reducers";
+
+import chatReducer from "./slices/ChatSlice";
 
 const persistConfig: PersistConfig<any, any, any> = {
   key: "root",
   storage,
-  whitelist: ["general"],
+  whitelist: ["chat"],
   blacklist: [],
 };
 
-const persistedReducer = persistReducer(persistConfig, rootReducer);
+const rootReducer = combineReducers({
+  chat: chatReducer,
+});
 
-export default () => {
-  let store = createStore(persistedReducer);
-  let persistor = persistStore(store);
-  return { store, persistor };
-};
+const persistedReducer = persistReducer(persistConfig, rootReducer);
+let store = createStore(persistedReducer);
+let persistor = persistStore(store);
+
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;
+
+export default { store, persistor };

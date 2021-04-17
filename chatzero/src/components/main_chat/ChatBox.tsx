@@ -1,5 +1,4 @@
-import React from "react";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Message } from "../../utils/types";
 import ChatInput from "./ChatInput";
 import ChatItem from "./ChatItem";
@@ -7,28 +6,6 @@ import TopBar from "./TopBar";
 
 function ChatBox() {
   const [messages, setMessages] = useState<Message[]>([]);
-  useEffect(() => {
-    let _messages: Message[] = [];
-    for (let i = 0; i < 10; i++) {
-      _messages.push({
-        belongsTo: "",
-        text: "How are you",
-        sender: {
-          name: "Hieu",
-          avatar: "hieu",
-          password: "",
-        },
-        receiver: {
-          name: "Hieu",
-          avatar: "hieu",
-          password: "",
-        },
-        sentAt: new Date().getMilliseconds(),
-        receivedAt: new Date().getMilliseconds(),
-      });
-    }
-    setMessages(_messages);
-  }, []);
 
   return (
     <div

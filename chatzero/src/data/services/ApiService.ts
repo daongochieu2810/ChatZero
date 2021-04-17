@@ -1,8 +1,8 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
-import Config from "../../../utils/config";
+import config from "../../utils/config";
 
 export default class ApiService {
-  private static readonly BASE_URL = Config.SERVER_BASE_URL;
+  private static readonly BASE_URL = config.SERVER_BASE_URL;
 
   public static async request(requestConfig: AxiosRequestConfig): Promise<any> {
     try {

@@ -1,18 +1,29 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Button, SimpleGrid, Text } from "@chakra-ui/react";
 import { useQuery } from "react-query";
-import FeedItem from "./FeedItem";
-import ApiService from "../../data/redux/services/ApiService";
-import UserService from "../../data/redux/services/UserService";
 
-const feeds = [0, 1, 2, 3];
+import { useAppSelector, useAppDispatch } from "../../data/redux/hooks";
+import { setCurrentChat } from "../../data/redux/slices/ChatSlice";
+import FeedItem from "./FeedItem";
+import UserService from "../../data/services/UserService";
+import { User } from "../../utils/types";
+
 function MainBrowser() {
+  const currentChat = useAppSelector((state) => state.chat.currentChat);
+  const dispatch = useAppDispatch();
+  const [feeds, setFeeds] = useState<User[] | undefined>([]);
   const { data } = useQuery("/users", async () => {
     return await UserService.getUsers();
   });
+
   useEffect(() => {
-    console.log(data);
-  });
+    setFeeds(data);
+  }, [data]);
+
+  useEffect(() => {
+    console.log(currentChat);
+  }, [currentChat]);
+
   return (
     <Box className="mobile:hidden tablet:block desktop:block h-full w-4/12">
       <SimpleGrid
@@ -25,42 +36,26 @@ function MainBrowser() {
           <Text className="text-5xl font-semibold">Chats</Text>
         </Box>
         <Box>
-          <Button
-            className="gradient-blue text-white hvr-grow"
-            size="lg"
-            onClick={() => {
-              //console.log(new Date().getMilliseconds);
-              /*ApiService.request({
-                url: "/users",
-                method: "GET",
-              }).then((users: any) => {
-                ApiService.request({
-                  url: "/chat",
-                  method: "POST",
-                  data: {
-                    person1: users[0],
-                    person2: users[1],
-                    createdAt: new Date().getMilliseconds(),
-                  },
-                }).then((response: any) => {
-                  console.log(response);
-                  ApiService.request({
-                    url: "/chat",
-                    method: "GET",
-                  }).then((data: any) => {
-                    console.log(data);
-                  });
-                });
-              });*/
-            }}
-          >
+          <Button className="gradient-blue text-white hvr-grow" size="lg">
             <Text className="mr-2 text-2xl">+</Text> Create new chat
           </Button>
         </Box>
       </SimpleGrid>
       <div>
-        {feeds.map((index: number) => (
-          <FeedItem key={index} />
+        {feeds?.map((user: User) => (
+          <FeedItem
+            key={user.name}
+            user={user}
+            onClickCallback={() => {
+              dispatch(
+                setCurrentChat({
+                  person1: feeds[0],
+                  person2: feeds[1],
+                  createdAt: new Date().getUTCMilliseconds(),
+                })
+              );
+            }}
+          />
         ))}
       </div>
     </Box>
