@@ -1,32 +1,50 @@
-import React, { createContext, useEffect } from "react";
+import React, { createContext, useEffect, useState } from "react";
 import { Box, Center, Text } from "@chakra-ui/react";
 
 import ChatBox from "./ChatBox";
 import { useAppSelector } from "../../data/redux/hooks";
-import { SingleChat } from "../../utils/types";
+import { SingleChat, SingleChatData } from "../../utils/types";
 import MessagingService from "../../data/services/MessagingService";
 
-export const CurrentChatContext = createContext<SingleChat | undefined>(
-  undefined
-);
+export interface CurrentChatContextData {
+  currentChatMetaData: SingleChat | undefined;
+  currentChatData: SingleChatData | undefined;
+  setCurrentChatData: React.Dispatch<
+    React.SetStateAction<SingleChatData | undefined>
+  >;
+}
+
+export const CurrentChatContext = createContext<
+  CurrentChatContextData | undefined
+>(undefined);
 
 function MainChat() {
-  const currentChat: SingleChat | undefined = useAppSelector(
+  const currentChatMetaData: SingleChat | undefined = useAppSelector(
     (state) => state.chat.currentChat
   );
+  const [currentChatData, setCurrentChatData] = useState<
+    SingleChatData | undefined
+  >();
 
   useEffect(() => {
-    if (currentChat) {
+    if (currentChatMetaData) {
       MessagingService.initSocketStream();
       MessagingService.setReceiveMessageCallback(() => {});
+      setCurrentChatData({
+        person1: currentChatMetaData!.person1,
+        person2: currentChatMetaData!.person2,
+        messages: [],
+      });
     }
-  }, [currentChat]);
+  }, [currentChatMetaData]);
 
   return (
-    <CurrentChatContext.Provider value={currentChat}>
+    <CurrentChatContext.Provider
+      value={{ currentChatMetaData, currentChatData, setCurrentChatData }}
+    >
       <Box className="h-full mobile:w-full tablet:w-8/12 desktop:w-6/12">
         <Center className="h-full w-full">
-          {currentChat ? (
+          {currentChatMetaData ? (
             <ChatBox />
           ) : (
             <Text>Choose a chat to get started</Text>

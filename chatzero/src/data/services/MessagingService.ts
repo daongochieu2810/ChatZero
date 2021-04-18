@@ -11,6 +11,7 @@ export default class MessagingService {
     this.socket.on("exception", function (data) {
       console.log("exception", data);
     });
+
     this.socket.on("disconnect", function () {
       console.log("disconnected");
     });

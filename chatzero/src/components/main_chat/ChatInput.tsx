@@ -1,15 +1,23 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import { ChangeEvent, useState } from "react";
 import { Box, Textarea, IconButton, HStack } from "@chakra-ui/react";
 import { RiSendPlaneLine as SendIcon } from "react-icons/ri";
 import { GoPlus as PlusIcon } from "react-icons/go";
 import MessagingService from "../../data/services/MessagingService";
+import { CurrentChatContext, CurrentChatContextData } from "./MainChat";
 
 function ChatInput() {
+  const currentChatContextData: CurrentChatContextData | undefined = useContext(
+    CurrentChatContext
+  );
+  const {
+    currentChatData,
+    setCurrentChatData,
+    currentChatMetaData,
+  } = currentChatContextData!;
   const [message, setMessage] = useState<string>("");
   const onMessageChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     let inputMessage = e.target.value;
-    //console.log(inputMessage);
     setMessage(inputMessage ? inputMessage : "");
   };
 
@@ -42,6 +50,14 @@ function ChatInput() {
           size="lg"
           onClick={() => {
             MessagingService.sendMessage(message);
+            currentChatData?.messages.push({
+              sender: currentChatMetaData!.person1,
+              receiver: currentChatMetaData!.person2,
+              receivedAt: new Date().getMilliseconds(),
+              sentAt: new Date().getMilliseconds(),
+              text: message,
+            });
+            setCurrentChatData({ ...currentChatData! });
           }}
         />
       </HStack>

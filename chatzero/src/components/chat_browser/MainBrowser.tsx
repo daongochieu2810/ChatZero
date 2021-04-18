@@ -21,10 +21,6 @@ function MainBrowser() {
     setFeeds(data);
   }, [data]);
 
-  useEffect(() => {
-    console.log(currentChat);
-  }, [currentChat]);
-
   return (
     <Box className="mobile:hidden tablet:block desktop:block h-full w-4/12">
       <SimpleGrid

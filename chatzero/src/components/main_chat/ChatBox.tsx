@@ -1,13 +1,15 @@
-import React, { useState, useContext } from "react";
-import { Message, SingleChat } from "../../utils/types";
+import React, { useContext, useEffect } from "react";
+import { Message } from "../../utils/types";
 import ChatInput from "./ChatInput";
 import ChatItem from "./ChatItem";
-import { CurrentChatContext } from "./MainChat";
+import { CurrentChatContext, CurrentChatContextData } from "./MainChat";
 import TopBar from "./TopBar";
 
 function ChatBox() {
-  const [messages, setMessages] = useState<Message[]>([]);
-  const currentChat: SingleChat | undefined = useContext(CurrentChatContext);
+  const currentChatContextData: CurrentChatContextData | undefined = useContext(
+    CurrentChatContext
+  );
+  let { currentChatData, currentChatMetaData } = currentChatContextData!;
 
   return (
     <div
@@ -19,7 +21,7 @@ function ChatBox() {
       }}
     >
       <div className="flex-none w-full">
-        <TopBar currentChat={currentChat} />
+        <TopBar currentChat={currentChatMetaData} />
       </div>
       <div
         className="flex-auto w-full"
@@ -27,7 +29,7 @@ function ChatBox() {
           overflowY: "scroll",
         }}
       >
-        {messages.map((item: Message, index: number) => (
+        {currentChatData?.messages.map((item: Message, index: number) => (
           <ChatItem key={index} message={item} />
         ))}
       </div>

@@ -19,3 +19,9 @@ export interface SingleChat {
   person2: User;
   createdAt: number;
 }
+
+export interface SingleChatData {
+  person1: User;
+  person2: User;
+  messages: Message[];
+}
