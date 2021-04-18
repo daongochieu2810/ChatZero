@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from "react";
-import { Message } from "../../utils/types";
+import React, { useState, useContext } from "react";
+import { Message, SingleChat } from "../../utils/types";
 import ChatInput from "./ChatInput";
 import ChatItem from "./ChatItem";
+import { CurrentChatContext } from "./MainChat";
 import TopBar from "./TopBar";
 
 function ChatBox() {
   const [messages, setMessages] = useState<Message[]>([]);
+  const currentChat: SingleChat | undefined = useContext(CurrentChatContext);
 
   return (
     <div
@@ -17,7 +19,7 @@ function ChatBox() {
       }}
     >
       <div className="flex-none w-full">
-        <TopBar />
+        <TopBar currentChat={currentChat} />
       </div>
       <div
         className="flex-auto w-full"

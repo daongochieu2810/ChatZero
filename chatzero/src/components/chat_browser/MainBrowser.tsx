@@ -10,6 +10,7 @@ import { User } from "../../utils/types";
 
 function MainBrowser() {
   const currentChat = useAppSelector((state) => state.chat.currentChat);
+  const currentUser = useAppSelector((state) => state.user.currentUser);
   const dispatch = useAppDispatch();
   const [feeds, setFeeds] = useState<User[] | undefined>([]);
   const { data } = useQuery("/users", async () => {
@@ -49,8 +50,8 @@ function MainBrowser() {
             onClickCallback={() => {
               dispatch(
                 setCurrentChat({
-                  person1: feeds[0],
-                  person2: feeds[1],
+                  person1: currentUser,
+                  person2: user,
                   createdAt: new Date().getUTCMilliseconds(),
                 })
               );
