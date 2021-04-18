@@ -3,12 +3,13 @@ import { ChangeEvent, useState } from "react";
 import { Box, Textarea, IconButton, HStack } from "@chakra-ui/react";
 import { RiSendPlaneLine as SendIcon } from "react-icons/ri";
 import { GoPlus as PlusIcon } from "react-icons/go";
+import MessagingService from "../../data/services/MessagingService";
 
 function ChatInput() {
   const [message, setMessage] = useState<string>("");
   const onMessageChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     let inputMessage = e.target.value;
-    console.log(inputMessage);
+    //console.log(inputMessage);
     setMessage(inputMessage ? inputMessage : "");
   };
 
@@ -39,6 +40,9 @@ function ChatInput() {
           isRound
           color="white"
           size="lg"
+          onClick={() => {
+            MessagingService.sendMessage(message);
+          }}
         />
       </HStack>
     </Box>

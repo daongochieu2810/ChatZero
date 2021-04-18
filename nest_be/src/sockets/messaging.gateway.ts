@@ -16,7 +16,7 @@ export class MessagingGateway {
 
   @SubscribeMessage('messages')
   findMessage(@MessageBody() data: any): Observable<WsResponse<string>> {
-    return from(['hello']).pipe(
+    return from([data]).pipe(
       map((item) => ({ event: 'messages', data: item })),
     );
   }

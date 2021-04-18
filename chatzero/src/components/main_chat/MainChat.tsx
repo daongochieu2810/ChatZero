@@ -1,9 +1,10 @@
-import React, { createContext } from "react";
+import React, { createContext, useEffect } from "react";
 import { Box, Center, Text } from "@chakra-ui/react";
 
 import ChatBox from "./ChatBox";
 import { useAppSelector } from "../../data/redux/hooks";
 import { SingleChat } from "../../utils/types";
+import MessagingService from "../../data/services/MessagingService";
 
 export const CurrentChatContext = createContext<SingleChat | undefined>(
   undefined
@@ -13,6 +14,13 @@ function MainChat() {
   const currentChat: SingleChat | undefined = useAppSelector(
     (state) => state.chat.currentChat
   );
+
+  useEffect(() => {
+    if (currentChat) {
+      MessagingService.initSocketStream();
+      MessagingService.setReceiveMessageCallback(() => {});
+    }
+  }, [currentChat]);
 
   return (
     <CurrentChatContext.Provider value={currentChat}>
