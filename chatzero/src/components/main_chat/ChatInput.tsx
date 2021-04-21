@@ -1,5 +1,4 @@
-import React, { useContext, useEffect } from "react";
-import { ChangeEvent, useState } from "react";
+import React, { useContext, useEffect, useState, ChangeEvent } from "react";
 import { Box, Textarea, IconButton, HStack } from "@chakra-ui/react";
 import { RiSendPlaneLine as SendIcon } from "react-icons/ri";
 import { GoPlus as PlusIcon } from "react-icons/go";
@@ -7,6 +6,10 @@ import MessagingService from "../../data/services/MessagingService";
 import { CurrentChatContext, CurrentChatContextData } from "./MainChat";
 
 function ChatInput() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const userName = urlParams.get("user");
+
+  const [isCallbackSet, setIsCallbackSet] = useState<boolean>(false);
   const currentChatContextData: CurrentChatContextData | undefined = useContext(
     CurrentChatContext
   );
@@ -20,6 +23,34 @@ function ChatInput() {
     let inputMessage = e.target.value;
     setMessage(inputMessage ? inputMessage : "");
   };
+
+  useEffect(() => {
+    setIsCallbackSet(false);
+  }, [currentChatMetaData]);
+
+  useEffect(() => {
+    if (isCallbackSet) {
+      return;
+    }
+    if (currentChatMetaData && currentChatData) {
+      setIsCallbackSet(true);
+      console.log("Setting up callback on receiving messages...");
+      MessagingService.setReceiveMessageCallback(
+        currentChatMetaData!.person1,
+        currentChatMetaData!.person2,
+        (_message: any) => {
+          currentChatData?.messages.push({
+            sender: currentChatMetaData!.person1,
+            receiver: currentChatMetaData!.person2,
+            receivedAt: new Date().getMilliseconds(),
+            sentAt: new Date().getMilliseconds(),
+            text: _message,
+          });
+          setCurrentChatData({ ...currentChatData! });
+        }
+      );
+    }
+  }, [currentChatMetaData, currentChatData]);
 
   return (
     <Box className="w-full px-5 pb-5">
@@ -49,15 +80,11 @@ function ChatInput() {
           color="white"
           size="lg"
           onClick={() => {
-            MessagingService.sendMessage(message);
-            currentChatData?.messages.push({
-              sender: currentChatMetaData!.person1,
-              receiver: currentChatMetaData!.person2,
-              receivedAt: new Date().getMilliseconds(),
-              sentAt: new Date().getMilliseconds(),
-              text: message,
-            });
-            setCurrentChatData({ ...currentChatData! });
+            MessagingService.sendMessage(
+              currentChatMetaData!.person1,
+              currentChatMetaData!.person2,
+              message
+            );
           }}
         />
       </HStack>

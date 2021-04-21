@@ -1,3 +1,4 @@
+import { Logger } from '@nestjs/common';
 import {
   MessageBody,
   SubscribeMessage,
@@ -14,10 +15,17 @@ export class MessagingGateway {
   @WebSocketServer()
   server: Server;
 
-  @SubscribeMessage('messages')
-  findMessage(@MessageBody() data: any): Observable<WsResponse<string>> {
-    return from([data]).pipe(
-      map((item) => ({ event: 'messages', data: item })),
-    );
+  @SubscribeMessage('join_room')
+  joinRoom(@MessageBody() data: any) {
+    Logger.log(`Joining room ${data.roomId}`);
+    this.server.socketsJoin(data.roomId);
+    this.server
+      .to(data.roomId)
+      .emit('joined_room', { message: 'New member joined' });
+  }
+
+  @SubscribeMessage('send_message')
+  sendMessage(@MessageBody() data: any) {
+    this.server.to(data.roomId).emit('sent_message', data);
   }
 }

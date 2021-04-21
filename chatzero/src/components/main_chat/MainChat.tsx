@@ -28,8 +28,10 @@ function MainChat() {
 
   useEffect(() => {
     if (currentChatMetaData) {
-      MessagingService.initSocketStream();
-      MessagingService.setReceiveMessageCallback(() => {});
+      MessagingService.initSocketStream(
+        currentChatMetaData!.person1,
+        currentChatMetaData!.person2
+      );
       setCurrentChatData({
         person1: currentChatMetaData!.person1,
         person2: currentChatMetaData!.person2,
