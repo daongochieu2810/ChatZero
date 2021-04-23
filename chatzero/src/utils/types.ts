@@ -19,9 +19,13 @@ export interface SingleChat {
   person2: User;
   createdAt: number;
 }
-
 export interface SingleChatData {
-  person1: User;
-  person2: User;
+  chat: SingleChat;
   messages: Message[];
+  draftMessage: string;
+}
+
+export interface CollectiveChatData {
+  chats: SingleChat[];
+  chatData: SingleChatData[];
 }

@@ -26,6 +26,7 @@ function ChatInput() {
 
   useEffect(() => {
     setIsCallbackSet(false);
+    setMessage("");
     if (isSwitch && currentChatMetaData) {
       const temp = currentChatMetaData!.person1;
       currentChatMetaData!.person1 = currentChatMetaData!.person2;

@@ -1,13 +1,16 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateChatDto, UpdateChatDto } from '../utils/dtos';
-import { Chat, ChatDocument } from './chat.schema';
+import { Chat, ChatDocument, Message, MessageDocument } from './chat.schema';
 
 @Injectable()
 export class ChatService {
   constructor(
-    @InjectModel(Chat.name) private readonly chatModel: Model<ChatDocument>,
+    @InjectModel(Chat.name)
+    private readonly chatModel: Model<ChatDocument>,
+    @InjectModel(Message.name)
+    private readonly messageModel: Model<MessageDocument>,
   ) {}
 
   async create(createChatDto: CreateChatDto): Promise<Chat> {
@@ -23,11 +26,14 @@ export class ChatService {
     return this.chatModel.findOne((chat: Chat) => chat.id === id);
   }
 
-  update(id: number, updateChatDto: UpdateChatDto) {
-    return this.chatModel.updateOne({ _id: id }, updateChatDto);
+  updateMessageIds(id: number, updateChatDto: UpdateChatDto) {
+    return this.chatModel.updateOne(
+      { _id: id },
+      { $push: { messageIds: { $each: updateChatDto.messageIds! } } },
+    );
   }
 
   remove(id: number) {
-    return this.chatModel.remove({ _id: id });
+    this.chatModel.remove({ _id: id });
   }
 }

@@ -5,6 +5,7 @@ export class CreateChatDto {
   person1: User;
   person2: User;
   createdAt: number;
+  messageIds: string[];
 }
 
 export class UpdateChatDto extends PartialType(CreateChatDto) {}

@@ -33,9 +33,9 @@ function MainChat() {
         currentChatMetaData!.person2
       );
       setCurrentChatData({
-        person1: currentChatMetaData!.person1,
-        person2: currentChatMetaData!.person2,
+        chat: currentChatMetaData,
         messages: [],
+        draftMessage: "",
       });
     }
   }, [currentChatMetaData]);
