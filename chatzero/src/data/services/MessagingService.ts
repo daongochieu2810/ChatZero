@@ -3,7 +3,7 @@ import Config from "../../utils/config";
 import { User } from "../../utils/types";
 export default class MessagingService {
   private static socket: Socket = io(Config.SERVER_BASE_URL);
-  private static generateRoomId = (person1: User, person2: User): string => {
+  public static generateRoomId = (person1: User, person2: User): string => {
     return person1.name > person2.name
       ? person1.name + person2.name
       : person2.name + person1.name;

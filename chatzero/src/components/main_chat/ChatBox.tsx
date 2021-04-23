@@ -1,15 +1,26 @@
-import React, { useContext, useEffect } from "react";
-import { Message } from "../../utils/types";
+import React, { useState, useEffect } from "react";
+import { useAppSelector } from "../../data/redux/hooks";
+import { CollectiveChatData, Message, SingleChatData } from "../../utils/types";
 import ChatInput from "./ChatInput";
 import ChatItem from "./ChatItem";
-import { CurrentChatContext, CurrentChatContextData } from "./MainChat";
 import TopBar from "./TopBar";
 
 function ChatBox() {
-  const currentChatContextData: CurrentChatContextData | undefined = useContext(
-    CurrentChatContext
+  const collectiveChatData: CollectiveChatData | undefined = useAppSelector(
+    (state) => state.chat.collectiveChatData
   );
-  let { currentChatData, currentChatMetaData } = currentChatContextData!;
+  const activeChatIndex: number | undefined = useAppSelector(
+    (state) => state.chat.activeChatIndex
+  );
+  const [activeChatData, setActiveChatData] = useState<
+    SingleChatData | undefined
+  >();
+
+  useEffect(() => {
+    if (activeChatIndex !== undefined) {
+      setActiveChatData(collectiveChatData?.chatData[activeChatIndex]);
+    }
+  }, [activeChatIndex, collectiveChatData]);
 
   return (
     <div
@@ -21,7 +32,7 @@ function ChatBox() {
       }}
     >
       <div className="flex-none w-full">
-        <TopBar currentChat={currentChatMetaData} />
+        <TopBar currentChat={activeChatData?.chat} />
       </div>
       <div
         className="flex-auto w-full"
@@ -29,7 +40,7 @@ function ChatBox() {
           overflowY: "scroll",
         }}
       >
-        {currentChatData?.messages.map((item: Message, index: number) => (
+        {activeChatData?.messages.map((item: Message, index: number) => (
           <ChatItem key={index} message={item} />
         ))}
       </div>

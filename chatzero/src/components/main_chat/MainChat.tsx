@@ -2,58 +2,52 @@ import React, { createContext, useEffect, useState } from "react";
 import { Box, Center, Text } from "@chakra-ui/react";
 
 import ChatBox from "./ChatBox";
-import { useAppSelector } from "../../data/redux/hooks";
-import { SingleChat, SingleChatData } from "../../utils/types";
+import { useAppSelector, useAppDispatch } from "../../data/redux/hooks";
+import { CollectiveChatData, SingleChatData } from "../../utils/types";
 import MessagingService from "../../data/services/MessagingService";
-
-export interface CurrentChatContextData {
-  currentChatMetaData: SingleChat | undefined;
-  currentChatData: SingleChatData | undefined;
-  setCurrentChatData: React.Dispatch<
-    React.SetStateAction<SingleChatData | undefined>
-  >;
-}
-
-export const CurrentChatContext = createContext<
-  CurrentChatContextData | undefined
->(undefined);
+import { disableChatInit } from "../../data/redux/slices/ChatSlice";
 
 function MainChat() {
-  const currentChatMetaData: SingleChat | undefined = useAppSelector(
-    (state) => state.chat.currentChat
+  const dispatch = useAppDispatch();
+  const collectiveChatData: CollectiveChatData | undefined = useAppSelector(
+    (state) => state.chat.collectiveChatData
   );
-  const [currentChatData, setCurrentChatData] = useState<
-    SingleChatData | undefined
-  >();
+  const activeChatIndex: number | undefined = useAppSelector(
+    (state) => state.chat.activeChatIndex
+  );
 
   useEffect(() => {
-    if (currentChatMetaData) {
-      MessagingService.initSocketStream(
-        currentChatMetaData!.person1,
-        currentChatMetaData!.person2
-      );
-      setCurrentChatData({
-        chat: currentChatMetaData,
-        messages: [],
-        draftMessage: "",
-      });
+    if (activeChatIndex === undefined) {
+      return;
     }
-  }, [currentChatMetaData]);
+    const activeChatData: SingleChatData | undefined =
+      collectiveChatData?.chatData[activeChatIndex];
+    if (!activeChatData) {
+      return;
+    }
+    console.log(activeChatData);
+    if (activeChatData && !activeChatData.chat.isInit) {
+      console.log(
+        `Init socket connection for ${activeChatData.chat.person1.name} and ${activeChatData.chat.person2.name}`
+      );
+      MessagingService.initSocketStream(
+        activeChatData.chat.person1,
+        activeChatData.chat.person2
+      );
+      dispatch(disableChatInit(activeChatIndex));
+    }
+  }, [activeChatIndex]);
 
   return (
-    <CurrentChatContext.Provider
-      value={{ currentChatMetaData, currentChatData, setCurrentChatData }}
-    >
-      <Box className="h-full mobile:w-full tablet:w-8/12 desktop:w-6/12">
-        <Center className="h-full w-full">
-          {currentChatMetaData ? (
-            <ChatBox />
-          ) : (
-            <Text>Choose a chat to get started</Text>
-          )}
-        </Center>
-      </Box>
-    </CurrentChatContext.Provider>
+    <Box className="h-full mobile:w-full tablet:w-8/12 desktop:w-6/12">
+      <Center className="h-full w-full">
+        {activeChatIndex !== undefined ? (
+          <ChatBox />
+        ) : (
+          <Text>Choose a chat to get started</Text>
+        )}
+      </Center>
+    </Box>
   );
 }
 

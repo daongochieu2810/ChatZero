@@ -1,23 +1,29 @@
-import React, { useContext, useEffect, useState, ChangeEvent } from "react";
+import React, { useEffect, useState, ChangeEvent } from "react";
 import { Box, Textarea, IconButton, HStack } from "@chakra-ui/react";
 import { RiSendPlaneLine as SendIcon } from "react-icons/ri";
 import { GoPlus as PlusIcon } from "react-icons/go";
 import MessagingService from "../../data/services/MessagingService";
-import { CurrentChatContext, CurrentChatContextData } from "./MainChat";
+import {
+  CollectiveChatData,
+  SingleChat,
+  SingleChatData,
+} from "../../utils/types";
+import { useAppDispatch, useAppSelector } from "../../data/redux/hooks";
+import { addMessage } from "../../data/redux/slices/ChatSlice";
 
 function ChatInput() {
   const urlParams = new URLSearchParams(window.location.search);
   let isSwitch = urlParams.get("switch");
+  const dispatch = useAppDispatch();
 
   const [isCallbackSet, setIsCallbackSet] = useState<boolean>(false);
-  const currentChatContextData: CurrentChatContextData | undefined = useContext(
-    CurrentChatContext
+  const collectiveChatData: CollectiveChatData = useAppSelector(
+    (state) => state.chat.collectiveChatData
   );
-  const {
-    currentChatData,
-    setCurrentChatData,
-    currentChatMetaData,
-  } = currentChatContextData!;
+  const activeChatIndex: number = useAppSelector(
+    (state) => state.chat.activeChatIndex
+  );
+
   const [message, setMessage] = useState<string>("");
   const onMessageChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     let inputMessage = e.target.value;
@@ -25,39 +31,22 @@ function ChatInput() {
   };
 
   useEffect(() => {
-    setIsCallbackSet(false);
-    setMessage("");
-    if (isSwitch && currentChatMetaData) {
-      const temp = currentChatMetaData!.person1;
-      currentChatMetaData!.person1 = currentChatMetaData!.person2;
-      currentChatMetaData!.person2 = temp;
-      isSwitch = null;
-    }
-  }, [currentChatMetaData]);
-
-  useEffect(() => {
-    if (isCallbackSet) {
-      return;
-    }
-    if (currentChatMetaData && currentChatData) {
-      setIsCallbackSet(true);
+    if (activeChatIndex !== undefined) {
+      setMessage("");
+      if (collectiveChatData.chatData[activeChatIndex].chat.isInit) {
+        return;
+      }
+      const activeChat: SingleChat = collectiveChatData.chats[activeChatIndex];
       console.log("Setting up callback on receiving messages...");
       MessagingService.setReceiveMessageCallback(
-        currentChatMetaData!.person1,
-        currentChatMetaData!.person2,
+        activeChat.person1,
+        activeChat.person2,
         (_message: any) => {
-          currentChatData?.messages.push({
-            sender: currentChatMetaData!.person1,
-            receiver: currentChatMetaData!.person2,
-            receivedAt: new Date().getMilliseconds(),
-            sentAt: new Date().getMilliseconds(),
-            text: _message,
-          });
-          setCurrentChatData({ ...currentChatData! });
+          dispatch(addMessage({ content: _message }));
         }
       );
     }
-  }, [currentChatMetaData, currentChatData]);
+  }, [activeChatIndex]);
 
   return (
     <Box className="w-full px-5 pb-5">
@@ -87,9 +76,11 @@ function ChatInput() {
           color="white"
           size="lg"
           onClick={() => {
+            const activeChat: SingleChat =
+              collectiveChatData.chats[activeChatIndex];
             MessagingService.sendMessage(
-              currentChatMetaData!.person1,
-              currentChatMetaData!.person2,
+              activeChat.person1,
+              activeChat.person2,
               message
             );
           }}

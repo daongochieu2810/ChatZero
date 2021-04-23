@@ -9,3 +9,7 @@ export class CreateChatDto {
 }
 
 export class UpdateChatDto extends PartialType(CreateChatDto) {}
+
+export class CreateMessageDto {
+  content: string;
+}

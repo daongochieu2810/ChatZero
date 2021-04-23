@@ -1,15 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, createContext } from "react";
 import { Box, Button, SimpleGrid, Text } from "@chakra-ui/react";
 import { useQuery } from "react-query";
 
 import { useAppSelector, useAppDispatch } from "../../data/redux/hooks";
-import { setCurrentChat } from "../../data/redux/slices/ChatSlice";
+import {
+  setCollectiveChatData,
+  setActiveChatIndex,
+} from "../../data/redux/slices/ChatSlice";
 import FeedItem from "./FeedItem";
 import UserService from "../../data/services/UserService";
-import { User } from "../../utils/types";
+import { CollectiveChatData, SingleChat, User } from "../../utils/types";
+import MessagingService from "../../data/services/MessagingService";
 
 function MainBrowser() {
-  const currentChat = useAppSelector((state) => state.chat.currentChat);
   const currentUser = useAppSelector((state) => state.user.currentUser);
   const dispatch = useAppDispatch();
   const [feeds, setFeeds] = useState<User[] | undefined>([]);
@@ -18,7 +21,30 @@ function MainBrowser() {
   });
 
   useEffect(() => {
+    let _collectiveChatData: CollectiveChatData = {
+      chatData: [],
+      chats: [],
+    };
+
     setFeeds(data);
+    if (data) {
+      for (let user of data!) {
+        const currChatMetaData: SingleChat = {
+          id: MessagingService.generateRoomId(currentUser, user),
+          person1: currentUser,
+          person2: user,
+          createdAt: new Date().getMilliseconds(),
+          isInit: false,
+        };
+        _collectiveChatData.chats.push(currChatMetaData);
+        _collectiveChatData.chatData.push({
+          chat: currChatMetaData,
+          messages: [],
+          draftMessage: "",
+        });
+      }
+      dispatch(setCollectiveChatData(_collectiveChatData));
+    }
   }, [data]);
 
   return (
@@ -39,18 +65,13 @@ function MainBrowser() {
         </Box>
       </SimpleGrid>
       <div>
-        {feeds?.map((user: User) => (
+        {feeds?.map((user: User, index: number) => (
           <FeedItem
             key={user.name}
             user={user}
             onClickCallback={() => {
-              dispatch(
-                setCurrentChat({
-                  person1: currentUser,
-                  person2: user,
-                  createdAt: new Date().getUTCMilliseconds(),
-                })
-              );
+              console.log(index);
+              dispatch(setActiveChatIndex(index));
             }}
           />
         ))}

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { CreateChatDto, UpdateChatDto } from '../utils/dtos';
+import { Model, UpdateWriteOpResult } from 'mongoose';
+import { CreateChatDto, CreateMessageDto, UpdateChatDto } from '../utils/dtos';
 import { Chat, ChatDocument, Message, MessageDocument } from './chat.schema';
 
 @Injectable()
@@ -18,22 +18,32 @@ export class ChatService {
     return createdChat.save();
   }
 
-  findAll() {
+  async findAll(): Promise<Chat[]> {
     return this.chatModel.find().exec();
   }
 
-  findOne(id: number) {
+  async findOne(id: number): Promise<Chat> {
     return this.chatModel.findOne((chat: Chat) => chat.id === id);
   }
 
-  updateMessageIds(id: number, updateChatDto: UpdateChatDto) {
-    return this.chatModel.updateOne(
-      { _id: id },
-      { $push: { messageIds: { $each: updateChatDto.messageIds! } } },
-    );
+  async updateMessageIds(
+    id: number,
+    updateChatDto: UpdateChatDto,
+  ): Promise<string | undefined> {
+    return this.chatModel
+      .updateOne(
+        { _id: id },
+        { $push: { messageIds: { $each: updateChatDto.messageIds! } } },
+      )
+      .getUpdate()._id;
   }
 
-  remove(id: number) {
-    this.chatModel.remove({ _id: id });
+  async createMessage(createMessageDto: CreateMessageDto): Promise<Message> {
+    const createdMessage = new this.messageModel(createMessageDto);
+    return createdMessage.save();
+  }
+
+  async removeOne(id: number): Promise<any> {
+    return this.chatModel.deleteOne({ _id: id });
   }
 }

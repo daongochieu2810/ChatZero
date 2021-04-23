@@ -15,7 +15,7 @@ function ChatItem({ message }: ChatItemProps) {
         className="p-5 gradient-blue shadow-md"
         style={{ borderRadius: "0 5px 5px 5px" }}
       >
-        <Text className="text-white">{message.text}</Text>
+        <Text className="text-white">{message.content}</Text>
       </Box>
     </HStack>
   );

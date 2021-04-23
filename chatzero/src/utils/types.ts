@@ -7,17 +7,15 @@ export interface User {
 
 // messaging
 export interface Message {
-  sender: User;
-  receiver: User;
-  text: string;
-  sentAt: number;
-  receivedAt: number | undefined;
+  content: string;
 }
 
 export interface SingleChat {
+  id: string;
   person1: User;
   person2: User;
   createdAt: number;
+  isInit: boolean;
 }
 export interface SingleChatData {
   chat: SingleChat;
