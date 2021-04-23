@@ -7,7 +7,7 @@ import { CurrentChatContext, CurrentChatContextData } from "./MainChat";
 
 function ChatInput() {
   const urlParams = new URLSearchParams(window.location.search);
-  const userName = urlParams.get("user");
+  let isSwitch = urlParams.get("switch");
 
   const [isCallbackSet, setIsCallbackSet] = useState<boolean>(false);
   const currentChatContextData: CurrentChatContextData | undefined = useContext(
@@ -26,6 +26,12 @@ function ChatInput() {
 
   useEffect(() => {
     setIsCallbackSet(false);
+    if (isSwitch && currentChatMetaData) {
+      const temp = currentChatMetaData!.person1;
+      currentChatMetaData!.person1 = currentChatMetaData!.person2;
+      currentChatMetaData!.person2 = temp;
+      isSwitch = null;
+    }
   }, [currentChatMetaData]);
 
   useEffect(() => {

@@ -19,9 +19,9 @@ export class MessagingGateway {
   joinRoom(@MessageBody() data: any) {
     Logger.log(`Joining room ${data.roomId}`);
     this.server.socketsJoin(data.roomId);
-    this.server
-      .to(data.roomId)
-      .emit('joined_room', { message: 'New member joined' });
+    this.server.to(data.roomId).emit('joined_room', {
+      message: `New member joined room ${data.roomId}`,
+    });
   }
 
   @SubscribeMessage('send_message')

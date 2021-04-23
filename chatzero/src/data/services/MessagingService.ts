@@ -3,6 +3,11 @@ import Config from "../../utils/config";
 import { User } from "../../utils/types";
 export default class MessagingService {
   private static socket: Socket = io(Config.SERVER_BASE_URL);
+  private static generateRoomId = (person1: User, person2: User): string => {
+    return person1.name > person2.name
+      ? person1.name + person2.name
+      : person2.name + person1.name;
+  };
 
   public static initSocketStream(person1: User, person2: User) {
     this.socket.on("connect", function () {
@@ -17,7 +22,9 @@ export default class MessagingService {
       console.log("disconnected");
     });
 
-    this.socket.emit("join_room", { roomId: person1.name + person2.name });
+    this.socket.emit("join_room", {
+      roomId: this.generateRoomId(person1, person2),
+    });
     this.socket.on("joined_room", function (message) {
       console.log(message);
     });
@@ -26,7 +33,7 @@ export default class MessagingService {
   public static sendMessage(person1: User, person2: User, message: string) {
     this.socket.emit("send_message", {
       data: message,
-      roomId: person1.name + person2.name,
+      roomId: this.generateRoomId(person1, person2),
     });
   }
 
@@ -35,9 +42,10 @@ export default class MessagingService {
     person2: User,
     callback: (data: any) => void
   ) {
+    const expectedId = this.generateRoomId(person1, person2);
     this.socket.on("sent_message", function (_data: any) {
       console.log(_data);
-      if (person1.name + person2.name === _data.roomId) {
+      if (expectedId === _data.roomId) {
         callback(_data.data);
       }
     });
