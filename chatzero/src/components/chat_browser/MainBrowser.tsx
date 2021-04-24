@@ -6,6 +6,7 @@ import { useAppSelector, useAppDispatch } from "../../data/redux/hooks";
 import {
   setCollectiveChatData,
   setActiveChatIndex,
+  enableChatInit,
 } from "../../data/redux/slices/ChatSlice";
 import FeedItem from "./FeedItem";
 import UserService from "../../data/services/UserService";
@@ -14,6 +15,9 @@ import MessagingService from "../../data/services/MessagingService";
 
 function MainBrowser() {
   const currentUser = useAppSelector((state) => state.user.currentUser);
+  const activeChatIndex: number = useAppSelector(
+    (state) => state.chat.activeChatIndex
+  );
   const dispatch = useAppDispatch();
   const [feeds, setFeeds] = useState<User[] | undefined>([]);
   const { data } = useQuery("/users", async () => {
@@ -44,6 +48,10 @@ function MainBrowser() {
         });
       }
       dispatch(setCollectiveChatData(_collectiveChatData));
+      console.log(activeChatIndex);
+      if (activeChatIndex !== undefined) {
+        dispatch(enableChatInit(activeChatIndex));
+      }
     }
   }, [data]);
 

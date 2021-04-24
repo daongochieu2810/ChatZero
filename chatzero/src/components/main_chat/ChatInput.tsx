@@ -16,7 +16,6 @@ function ChatInput() {
   let isSwitch = urlParams.get("switch");
   const dispatch = useAppDispatch();
 
-  const [isCallbackSet, setIsCallbackSet] = useState<boolean>(false);
   const collectiveChatData: CollectiveChatData = useAppSelector(
     (state) => state.chat.collectiveChatData
   );
@@ -33,10 +32,12 @@ function ChatInput() {
   useEffect(() => {
     if (activeChatIndex !== undefined) {
       setMessage("");
-      if (collectiveChatData.chatData[activeChatIndex].chat.isInit) {
+      const activeChat: SingleChat =
+        collectiveChatData.chatData[activeChatIndex].chat;
+      if (activeChat.isInit) {
         return;
       }
-      const activeChat: SingleChat = collectiveChatData.chats[activeChatIndex];
+
       console.log("Setting up callback on receiving messages...");
       MessagingService.setReceiveMessageCallback(
         activeChat.person1,

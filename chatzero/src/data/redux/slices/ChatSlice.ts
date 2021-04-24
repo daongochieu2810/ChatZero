@@ -27,6 +27,9 @@ const chatSlice = createSlice({
     disableChatInit(state, action: PayloadAction<number>) {
       state.collectiveChatData!.chatData[action.payload].chat.isInit = true;
     },
+    enableChatInit(state, action: PayloadAction<number>) {
+      state.collectiveChatData!.chatData[action.payload].chat.isInit = false;
+    },
     addMessage(state, action: PayloadAction<Message>) {
       const activeChatData = state.collectiveChatData!.chatData[
         state.activeChatIndex!
@@ -40,6 +43,7 @@ export const {
   setCollectiveChatData,
   setActiveChatIndex,
   disableChatInit,
+  enableChatInit,
   addMessage,
 } = chatSlice.actions;
 export default chatSlice.reducer;
