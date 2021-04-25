@@ -15,13 +15,9 @@ function MainChat() {
   const activeChatIndex: number | undefined = useAppSelector(
     (state) => state.chat.activeChatIndex
   );
+  const [activeChatData, setActiveChatData] = useState<SingleChatData>();
 
   useEffect(() => {
-    if (activeChatIndex === undefined) {
-      return;
-    }
-    const activeChatData: SingleChatData | undefined =
-      collectiveChatData?.chatData[activeChatIndex];
     if (!activeChatData) {
       return;
     }
@@ -34,9 +30,26 @@ function MainChat() {
         activeChatData.chat.person1,
         activeChatData.chat.person2
       );
-      dispatch(disableChatInit(activeChatIndex));
+      dispatch(disableChatInit(activeChatIndex!));
     }
-  }, [activeChatIndex]);
+  }, [activeChatData]);
+
+  useEffect(() => {
+    console.log(activeChatIndex);
+    console.log(collectiveChatData);
+    if (activeChatIndex === undefined) {
+      return;
+    }
+    const currActiveChat = collectiveChatData?.chatData[activeChatIndex];
+    if (!currActiveChat) {
+      return;
+    }
+    if (!activeChatData || currActiveChat.chat.id !== activeChatData.chat.id) {
+      setActiveChatData(currActiveChat);
+    } else {
+      setActiveChatData({ ...activeChatData, chat: currActiveChat.chat });
+    }
+  }, [activeChatIndex, collectiveChatData?.chats]);
 
   return (
     <Box className="h-full mobile:w-full tablet:w-8/12 desktop:w-6/12">

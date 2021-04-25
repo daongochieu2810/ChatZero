@@ -22,6 +22,7 @@ function ChatInput() {
   const activeChatIndex: number = useAppSelector(
     (state) => state.chat.activeChatIndex
   );
+  const [activeChatData, setActiveChatData] = useState<SingleChatData>();
 
   const [message, setMessage] = useState<string>("");
   const onMessageChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
@@ -30,24 +31,39 @@ function ChatInput() {
   };
 
   useEffect(() => {
+    if (!activeChatData) {
+      return;
+    }
+    const activeChat: SingleChat = activeChatData.chat;
+    if (activeChat.isInit) {
+      return;
+    }
+
+    console.log("Setting up callback on receiving messages...");
+    MessagingService.setReceiveMessageCallback(
+      activeChat.person1,
+      activeChat.person2,
+      (_message: any) => {
+        dispatch(addMessage({ content: _message }));
+      }
+    );
+  }, [activeChatData]);
+
+  useEffect(() => {
+    setActiveChatData(collectiveChatData.chatData[activeChatIndex]);
     if (activeChatIndex !== undefined) {
       setMessage("");
-      const activeChat: SingleChat =
-        collectiveChatData.chatData[activeChatIndex].chat;
-      if (activeChat.isInit) {
-        return;
-      }
-
-      console.log("Setting up callback on receiving messages...");
-      MessagingService.setReceiveMessageCallback(
-        activeChat.person1,
-        activeChat.person2,
-        (_message: any) => {
-          dispatch(addMessage({ content: _message }));
-        }
-      );
     }
-  }, [activeChatIndex]);
+    const currActiveChat = collectiveChatData?.chatData[activeChatIndex];
+    if (!currActiveChat) {
+      return;
+    }
+    if (!activeChatData || currActiveChat.chat.id !== activeChatData.chat.id) {
+      setActiveChatData(currActiveChat);
+    } else {
+      setActiveChatData({ ...activeChatData, chat: currActiveChat.chat });
+    }
+  }, [activeChatIndex, collectiveChatData.chats]);
 
   return (
     <Box className="w-full px-5 pb-5">
