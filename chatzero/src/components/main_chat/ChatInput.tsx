@@ -41,10 +41,9 @@ function ChatInput() {
 
     console.log("Setting up callback on receiving messages...");
     MessagingService.setReceiveMessageCallback(
-      activeChat.person1,
-      activeChat.person2,
+      activeChat.id,
       (_message: any) => {
-        dispatch(addMessage({ content: _message }));
+        dispatch(addMessage(_message));
       }
     );
   }, [activeChatData]);
@@ -96,10 +95,18 @@ function ChatInput() {
             const activeChat: SingleChat =
               collectiveChatData.chats[activeChatIndex];
             MessagingService.sendMessage(
+              activeChat.id,
               activeChat.person1,
               activeChat.person2,
               message
             );
+            MessagingService.sendMessage(
+              activeChat.id,
+              activeChat.person2,
+              activeChat.person1,
+              message + " received!!!"
+            );
+            setMessage("");
           }}
         />
       </HStack>

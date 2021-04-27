@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, UpdateWriteOpResult } from 'mongoose';
 import { CreateChatDto, CreateMessageDto, UpdateChatDto } from '../utils/dtos';
@@ -45,5 +45,10 @@ export class ChatService {
 
   async removeOne(id: number): Promise<any> {
     return this.chatModel.deleteOne({ _id: id });
+  }
+
+  async test(): Promise<string> {
+    Logger.log('test service + socket');
+    return 'HELLO BRO';
   }
 }

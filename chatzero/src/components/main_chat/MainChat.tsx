@@ -1,4 +1,4 @@
-import React, { createContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Center, Text } from "@chakra-ui/react";
 
 import ChatBox from "./ChatBox";
@@ -21,15 +21,12 @@ function MainChat() {
     if (!activeChatData) {
       return;
     }
-    console.log(activeChatData);
+    //console.log(activeChatData);
     if (activeChatData && !activeChatData.chat.isInit) {
       console.log(
         `Init socket connection for ${activeChatData.chat.person1.name} and ${activeChatData.chat.person2.name}`
       );
-      MessagingService.initSocketStream(
-        activeChatData.chat.person1,
-        activeChatData.chat.person2
-      );
+      MessagingService.initSocketStream(activeChatData.chat.id);
       dispatch(disableChatInit(activeChatIndex!));
     }
   }, [activeChatData]);

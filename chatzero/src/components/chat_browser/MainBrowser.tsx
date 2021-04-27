@@ -1,4 +1,4 @@
-import React, { useEffect, useState, createContext } from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Button, SimpleGrid, Text } from "@chakra-ui/react";
 import { useQuery } from "react-query";
 
@@ -6,46 +6,48 @@ import { useAppSelector, useAppDispatch } from "../../data/redux/hooks";
 import {
   setCollectiveChatData,
   setActiveChatIndex,
-  enableChatInit,
 } from "../../data/redux/slices/ChatSlice";
 import FeedItem from "./FeedItem";
-import UserService from "../../data/services/UserService";
 import { CollectiveChatData, SingleChat, User } from "../../utils/types";
 import MessagingService from "../../data/services/MessagingService";
 
 function MainBrowser() {
-  const currentUser = useAppSelector((state) => state.user.currentUser);
+  const currentUser: User = useAppSelector((state) => state.user.currentUser);
   const dispatch = useAppDispatch();
-  const [feeds, setFeeds] = useState<User[] | undefined>([]);
-  const { data } = useQuery("/users", async () => {
-    return await UserService.getUsers();
+  const [feeds, setFeeds] = useState<SingleChat[] | undefined>([]);
+  const { data } = useQuery("/chat", async () => {
+    return await MessagingService.getAllSingleChats();
   });
 
   useEffect(() => {
+    if (!data) {
+      return;
+    }
+    console.log(data);
     let _collectiveChatData: CollectiveChatData = {
       chatData: [],
       chats: [],
     };
 
-    setFeeds(data);
-    if (data) {
-      for (let user of data!) {
-        const currChatMetaData: SingleChat = {
-          id: MessagingService.generateRoomId(currentUser, user),
-          person1: currentUser,
-          person2: user,
-          createdAt: new Date().getMilliseconds(),
-          isInit: false,
-        };
-        _collectiveChatData.chats.push(currChatMetaData);
-        _collectiveChatData.chatData.push({
-          chat: currChatMetaData,
-          messages: [],
-          draftMessage: "",
-        });
-      }
-      dispatch(setCollectiveChatData(_collectiveChatData));
+    const chats: SingleChat[] = data.map(
+      (item: any): SingleChat => ({
+        person1: item.person1,
+        person2: item.person2,
+        createdAt: Date.now(),
+        isInit: false,
+        id: data._id,
+      })
+    );
+    setFeeds(chats);
+    _collectiveChatData.chats = chats;
+    for (let chat of chats) {
+      _collectiveChatData.chatData.push({
+        chat: chat,
+        messages: [],
+        draftMessage: "",
+      });
     }
+    dispatch(setCollectiveChatData(_collectiveChatData));
   }, [data]);
 
   return (
@@ -66,10 +68,14 @@ function MainBrowser() {
         </Box>
       </SimpleGrid>
       <div>
-        {feeds?.map((user: User, index: number) => (
+        {feeds?.map((chat: SingleChat, index: number) => (
           <FeedItem
-            key={user.name}
-            user={user}
+            key={chat.id}
+            user={
+              currentUser.name === chat.person1.name
+                ? chat.person2
+                : chat.person1
+            }
             onClickCallback={() => {
               console.log(index);
               dispatch(setActiveChatIndex(index));

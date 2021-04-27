@@ -4,14 +4,13 @@ import {
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
-  WsResponse,
 } from '@nestjs/websockets';
-import { from, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { Server } from 'socket.io';
+import { ChatService } from 'src/chat/chat.service';
 
 @WebSocketGateway()
 export class MessagingGateway {
+  constructor(private readonly chatService: ChatService) {}
   @WebSocketServer()
   server: Server;
 
@@ -22,10 +21,16 @@ export class MessagingGateway {
     this.server.to(data.roomId).emit('joined_room', {
       message: `New member joined room ${data.roomId}`,
     });
+    this.chatService.test();
   }
 
   @SubscribeMessage('send_message')
   sendMessage(@MessageBody() data: any) {
     this.server.to(data.roomId).emit('sent_message', data);
+    this.chatService.createMessage({
+      content: data.data,
+      sender: data.sender,
+      receiver: data.receiver,
+    });
   }
 }

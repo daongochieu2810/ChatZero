@@ -19,7 +19,11 @@ function ChatItem({ message, sender }: ChatItemProps) {
       })}
     >
       {currentUser.name !== sender.name && (
-        <Image className="rounded-full h-icon w-icon m-2" src={Avatar} />
+        <Image
+          objectFit="cover"
+          className="rounded-full h-icon w-icon m-2"
+          src={sender.avatar}
+        />
       )}
       <Box
         className={cx("p-5 shadow-md", {
@@ -27,7 +31,7 @@ function ChatItem({ message, sender }: ChatItemProps) {
         })}
         style={{
           borderRadius:
-            currentUser.name !== sender.name
+            currentUser.name === sender.name
               ? "5px 0 5px 5px"
               : "0 5px 5px 5px",
         }}

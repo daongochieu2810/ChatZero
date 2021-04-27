@@ -1,15 +1,18 @@
 import { io, Socket } from "socket.io-client";
 import Config from "../../utils/config";
-import { User } from "../../utils/types";
+import { Message, SingleChat, User } from "../../utils/types";
+import ApiService from "./ApiService";
 export default class MessagingService {
   private static socket: Socket = io(Config.SERVER_BASE_URL);
-  public static generateRoomId = (person1: User, person2: User): string => {
-    return person1.name > person2.name
-      ? person1.name + person2.name
-      : person2.name + person1.name;
-  };
 
-  public static initSocketStream(person1: User, person2: User) {
+  public static async getAllSingleChats(): Promise<any> {
+    return await ApiService.request({
+      url: "/chat",
+      method: "GET",
+    });
+  }
+
+  public static initSocketStream(chatId: string) {
     this.socket.on("connect", function () {
       console.log("Connected to server");
     });
@@ -23,30 +26,39 @@ export default class MessagingService {
     });
 
     this.socket.emit("join_room", {
-      roomId: this.generateRoomId(person1, person2),
+      roomId: chatId,
     });
     this.socket.on("joined_room", function (message) {
       console.log(message);
     });
   }
 
-  public static sendMessage(person1: User, person2: User, message: string) {
+  public static sendMessage(
+    chatId: string,
+    sender: User,
+    receiver: User,
+    message: string
+  ) {
     this.socket.emit("send_message", {
       data: message,
-      roomId: this.generateRoomId(person1, person2),
+      sender: sender,
+      receiver: receiver,
+      roomId: chatId,
     });
   }
 
   public static setReceiveMessageCallback(
-    person1: User,
-    person2: User,
-    callback: (data: any) => void
+    chatId: string,
+    callback: (data: Message) => void
   ) {
-    const expectedId = this.generateRoomId(person1, person2);
     this.socket.on("sent_message", function (_data: any) {
       console.log(_data);
-      if (expectedId === _data.roomId) {
-        callback(_data.data);
+      if (chatId === _data.roomId) {
+        callback({
+          content: _data.data,
+          sender: _data.sender,
+          receiver: _data.receiver,
+        });
       }
     });
   }

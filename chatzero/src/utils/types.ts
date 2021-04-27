@@ -8,6 +8,8 @@ export interface User {
 // messaging
 export interface Message {
   content: string;
+  sender: User;
+  receiver: User;
 }
 
 export interface SingleChat {

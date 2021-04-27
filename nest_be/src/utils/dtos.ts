@@ -12,4 +12,6 @@ export class UpdateChatDto extends PartialType(CreateChatDto) {}
 
 export class CreateMessageDto {
   content: string;
+  sender: User;
+  receiver: User;
 }

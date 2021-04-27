@@ -41,11 +41,7 @@ function ChatBox() {
         }}
       >
         {activeChatData?.messages.map((item: Message, index: number) => (
-          <ChatItem
-            key={index}
-            message={item}
-            sender={activeChatData?.chat.person1}
-          />
+          <ChatItem key={index} message={item} sender={item.sender} />
         ))}
       </div>
       <div className="flex-none w-full">
