@@ -14,9 +14,9 @@ function TopBar({ currentChat }: TopBarProps) {
           <Image
             objectFit="cover"
             className="rounded-full h-icon w-icon m-5"
-            src={currentChat?.person2.avatar}
+            src={currentChat?.person2?.avatar}
           />
-          <Text>{currentChat?.person2.name}</Text>
+          <Text>{currentChat?.person2?.name}</Text>
         </HStack>
       </Box>
       <Divider />

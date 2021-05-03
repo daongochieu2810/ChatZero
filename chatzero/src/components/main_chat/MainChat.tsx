@@ -24,7 +24,7 @@ function MainChat() {
     //console.log(activeChatData);
     if (activeChatData && !activeChatData.chat.isInit) {
       console.log(
-        `Init socket connection for ${activeChatData.chat.person1.name} and ${activeChatData.chat.person2.name}`
+        `Init socket connection for ${activeChatData.chat.person1?.name} and ${activeChatData.chat.person2?.name}`
       );
       MessagingService.initSocketStream(activeChatData.chat.id);
       dispatch(disableChatInit(activeChatIndex!));
@@ -32,8 +32,6 @@ function MainChat() {
   }, [activeChatData]);
 
   useEffect(() => {
-    console.log(activeChatIndex);
-    console.log(collectiveChatData);
     if (activeChatIndex === undefined) {
       return;
     }
