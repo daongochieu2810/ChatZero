@@ -10,7 +10,6 @@ import {
 import { ChatService } from './chat.service';
 import { CreateChatDto, CreateMessageDto, UpdateChatDto } from '../utils/dtos';
 import { NotificationService } from 'src/cron/NotificationService';
-import { Inject } from '@nestjs/common';
 
 @Controller('chat')
 export class ChatController {
