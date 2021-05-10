@@ -9,10 +9,13 @@ import {
 } from '@nestjs/common';
 import { ChatService } from './chat.service';
 import { CreateChatDto, CreateMessageDto, UpdateChatDto } from '../utils/dtos';
+import { NotificationService } from 'src/cron/NotificationService';
+import { Inject } from '@nestjs/common';
 
 @Controller('chat')
 export class ChatController {
-  constructor(private readonly chatService: ChatService) {}
+  constructor(private readonly chatService: ChatService, 
+    private readonly notificationService: NotificationService) {}
 
   @Post()
   createChat(@Body() createChatDto: CreateChatDto) {
@@ -45,5 +48,10 @@ export class ChatController {
   @Delete(':id')
   removeOneChat(@Param('id') id: string) {
     return this.chatService.removeOne(+id);
+  }
+
+  @Get("/add/cron")
+  scheduleCronJob() {
+    this.notificationService.handleCron()
   }
 }

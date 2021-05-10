@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, UpdateWriteOpResult } from 'mongoose';
+import { Model } from 'mongoose';
 import { CreateChatDto, CreateMessageDto, UpdateChatDto } from '../utils/dtos';
 import { Chat, ChatDocument, Message, MessageDocument } from './chat.schema';
 
