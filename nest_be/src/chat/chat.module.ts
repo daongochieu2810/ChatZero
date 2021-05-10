@@ -9,7 +9,7 @@ import { Chat, ChatSchema, Message, MessageSchema } from './chat.schema';
     MongooseModule.forFeature([
       { name: Chat.name, schema: ChatSchema },
       { name: Message.name, schema: MessageSchema },
-    ]),
+    ])
   ],
   controllers: [ChatController],
   providers: [ChatService],

@@ -13,10 +13,25 @@ async function bootstrap() {
         port: 3002
       }
     }
+  );
+  const rabbitMQServer = await NestFactory.createMicroservice<MicroserviceOptions>(
+    AppModule,
+    {
+      transport: Transport.RMQ,
+      options: {
+        urls: ['amqp://localhost:5672'],
+        queue: 'main_queue',
+        queueOptions: {
+          durable: false
+        },
+      }
+    }
   )
 
   mainApp.useWebSocketAdapter(new SocketAdapter(mainApp, true));
   await mainApp.listen(3001, () => console.log('Http server is listening at port 3001'));
-  microServiceServer.listen(() => console.log('Microservice server is listening at port 3002'))
+  microServiceServer.listen(() => console.log('Microservice server is listening at port 3002'));
+  rabbitMQServer.listen(() => console.log('RabbitMQ server is listening'))
 }
+
 bootstrap();
